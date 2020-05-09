@@ -14,7 +14,11 @@ class EASYSOCKET_API TCPSocket : public BaseSocket
 {
 public:
     // Event Listeners:
-    std::function<void(std::string)> onMessageReceived = [](std::string msg) { FDR_UNUSED(msg) };
+    #ifdef EASYSOCKET_RECV_BIN
+        std::function<void(char *msg,unsigned long long s)> onMessageReceived = [](char *msg, unsigned long long s) { (void)(msg);s=0;  };
+    #else
+        std::function<void(std::string)> onMessageReceived = [](std::string msg) { FDR_UNUSED(msg) };
+    #endif
     std::function<void()> onSocketClosed = [](){};
 
     explicit TCPSocket(FDR_ON_ERROR, int socketId = -1);

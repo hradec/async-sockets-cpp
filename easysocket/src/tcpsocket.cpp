@@ -72,7 +72,11 @@ void TCPSocket::Receive(TCPSocket *socket)
 
     while ((messageLength = recv(socket->sock, tempBuffer, BUFFER_SIZE, 0)) > 0)
     {
-        socket->onMessageReceived(std::string(tempBuffer).substr(0, messageLength));
+        #ifdef EASYSOCKET_RECV_BIN
+            socket->onMessageReceived( tempBuffer, messageLength );
+        #else
+            socket->onMessageReceived(std::string(tempBuffer).substr(0, messageLength));
+        #endif
     }
 
     socket->Close();
